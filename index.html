@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>redirecting</title>
+  </head>
+  <body>
+    <script>
+      !(async () => {
+        const package = this.location.pathname.slice(1)
+        try {
+          const req = await fetch(`https://api.npms.io/v2/package/${package}`)
+          const info = await req.json()
+
+          const { repository } = info.collected.metadata
+          const repoURL = repository.url.replace(/git\+|\.git$/gm, "")
+
+          window.location = repoURL
+        } catch (err) {
+          window.location = `https://npms.io/search?q=${package}`
+        }
+      })()
+    </script>
+  </body>
+</html>
