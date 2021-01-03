@@ -26,7 +26,7 @@
         }
       }
     </style>
-    <span>fetching repository url</span>
+    <span>redirecting..</span>
     <script defer>
       !(async () => {
         const package = this.location.pathname.slice(1)
@@ -38,6 +38,8 @@
         if (cached) return (window.location = cached)
 
         try {
+          infoText.innerText = "fetching repository url"
+
           const req = await fetch(`https://api.npms.io/v2/package/${package}`)
           const info = await req.json()
 
