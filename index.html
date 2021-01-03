@@ -1,18 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>redirecting</title>
+    <title>redirecting...</title>
   </head>
   <body>
-    <script>
+    <style>
+      html,
+      body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-family: "Fira Code", "Roboto Mono", monospace;
+        color: #fff;
+        background: #111;
+      }
+      @media (prefers-color-scheme: light) {
+        html,
+        body {
+          color: #111;
+          background: #fff;
+        }
+      }
+    </style>
+    <span>fetching repository url</span>
+    <script defer>
       !(async () => {
         const package = this.location.pathname.slice(1)
+        const infoText = document.querySelector("span")
+
+        if (!package) return (infoText.innerText = "please include a package name in the url")
+
+        const cached = localStorage.getItem(package)
+        if (cached) return (window.location = cached)
+
         try {
           const req = await fetch(`https://api.npms.io/v2/package/${package}`)
           const info = await req.json()
 
+          infoText.innerText = "redirecting..."
+
           const { repository } = info.collected.metadata
           const repoURL = repository.url.replace(/git\+|\.git$/gm, "")
+          localStorage.setItem(package, repoURL)
 
           window.location = repoURL
         } catch (err) {
