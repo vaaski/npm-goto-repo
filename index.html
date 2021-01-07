@@ -46,7 +46,10 @@
           infoText.innerText = "redirecting..."
 
           const { repository } = info.collected.metadata
-          const repoURL = repository.url.replace(/git\+|\.git$/gm, "").replace("git://", "https://")
+          const repoURL = repository.url
+            .replace(/^git\+|\.git$/gm, "")
+            .replace(/^git:\/\/|^ssh:\/\/git@/gm, "https://")
+
           localStorage.setItem(package, repoURL)
 
           window.location = repoURL

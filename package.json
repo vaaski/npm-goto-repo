@@ -1,0 +1,23 @@
+{
+  "name": "npm-goto-repo",
+  "version": "1.0.0",
+  "description": "a very simple webapp that redirects to the repository of an NPM package.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "live-server . --entry-file=index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vaaski/npm-goto-repo.git"
+  },
+  "author": "vaaski <admin@vaa.ski>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vaaski/npm-goto-repo/issues"
+  },
+  "homepage": "https://github.com/vaaski/npm-goto-repo#readme",
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  }
+}
