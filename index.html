@@ -25,6 +25,10 @@
           background: #fff;
         }
       }
+
+      span {
+        padding: 1rem;
+      }
     </style>
     <span>redirecting..</span>
     <script defer>
@@ -32,7 +36,11 @@
         const package = this.location.pathname.slice(1)
         const infoText = document.querySelector("span")
 
-        if (!package) return (infoText.innerText = "please include a package name in the url")
+        if (!package) {
+          infoText.innerText = "please include a package name in the url"
+          document.title = "error"
+          return
+        }
 
         const cached = localStorage.getItem(package)
         if (cached) return (window.location = cached)
@@ -40,18 +48,23 @@
         try {
           infoText.innerText = "fetching repository url"
 
-          const req = await fetch(`https://api.npms.io/v2/package/${package}`)
+          const req = await fetch(`https://api.npms.io/v2/package/mget`, {
+            method: "POST",
+            headers: { "content-type": "application/json", Accept: "application/json" },
+            body: JSON.stringify([package]),
+          })
+
           const info = await req.json()
+          const packageInfo = info[package]
 
-          infoText.innerText = "redirecting..."
-
-          const { repository } = info.collected.metadata
+          const repository = packageInfo.collected.metadata.repository
           const repoURL = repository.url
             .replace(/^git\+|\.git$/gm, "")
             .replace(/^git:\/\/|^ssh:\/\/git@/gm, "https://")
 
           localStorage.setItem(package, repoURL)
 
+          infoText.innerText = "redirecting..."
           window.location = repoURL
         } catch (err) {
           window.location = `https://npms.io/search?q=${package}`
