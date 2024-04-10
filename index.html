@@ -33,7 +33,7 @@
     <span>redirecting..</span>
     <script defer>
       !(async () => {
-        const package = this.location.pathname.slice(1)
+        const package = window.location.pathname.slice(1)
         const infoText = document.querySelector("span")
 
         if (!package) {
@@ -48,16 +48,11 @@
         try {
           infoText.innerText = "fetching repository url"
 
-          const req = await fetch(`https://api.npms.io/v2/package/mget`, {
-            method: "POST",
-            headers: { "content-type": "application/json", Accept: "application/json" },
-            body: JSON.stringify([package]),
-          })
+          const req = await fetch(`https://npm.io/api/v1/package/${package}`)
 
-          const info = await req.json()
-          const packageInfo = info[package]
+          const packageInfo = await req.json()
 
-          const repository = packageInfo.collected.metadata.repository
+          const repository = packageInfo.repository
           const repoURL = repository.url
             .replace(/^git\+|\.git$/gm, "")
             .replace(/^git:\/\/|^ssh:\/\/git@/gm, "https://")
@@ -65,9 +60,9 @@
           localStorage.setItem(package, repoURL)
 
           infoText.innerText = "redirecting..."
-          window.location = repoURL
+          window.location.replace(repoURL)
         } catch (err) {
-          window.location = `https://npms.io/search?q=${package}`
+          window.location.replace(`https://npm.io/package/${package}`)
         }
       })()
     </script>
