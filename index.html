@@ -57,12 +57,16 @@
             .replace(/^git\+|\.git$/gm, "")
             .replace(/^git:\/\/|^ssh:\/\/git@/gm, "https://")
 
-          localStorage.setItem(package, repoURL)
+          const replacedUrl = repoURL
+            .replace("https://www.npmjs.com/", "https://npmx.dev/")
+            .replace("https://npmjs.com/", "https://npmx.dev/")
+
+          localStorage.setItem(package, replacedUrl)
 
           infoText.innerText = "redirecting..."
-          window.location.replace(repoURL)
+          window.location.replace(replacedUrl)
         } catch (err) {
-          window.location.replace(`https://npm.io/package/${package}`)
+          window.location.replace(`https://npmx.dev/package/${package}`)
         }
       })()
     </script>
